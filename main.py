@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 import models
@@ -10,12 +9,14 @@ from fastapi.middleware.cors import CORSMiddleware
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
-origins = [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:3001",
-]
+# ===================================================================
+# ARREGLO 1: CORS
+# Ponemos "*" para que acepte pedidos desde cualquier origen.
+# Esto es clave para que tu frontend en Render/Vercel pueda pegarle a la API.
+# Después, por seguridad, podés cambiar "*" por la URL de tu frontend.
+origins = ["*"]
+# ===================================================================
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -23,6 +24,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ===================================================================
+# ARREGLO 2: RUTA RAÍZ (HEALTH CHECK)
+# Esta es la ruta que Render chequea para ver si la app levantó.
+# Sin esto, te tira el 404 Not Found.
+@app.get("/")
+def read_root():
+    return {"status": "ok", "message": "API de EmpanadasLuna VIVA!"}
+# ===================================================================
+
 
 # --- SEMANAS ---
 @app.post("/semanas/", response_model=schemas.Semana)
