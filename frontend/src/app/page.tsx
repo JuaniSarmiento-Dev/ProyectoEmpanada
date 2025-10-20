@@ -50,7 +50,7 @@ export default function HomePage() {
       await createSemana(form);
       setForm({ nombre: "" });
       fetchSemanas();
-    } catch (e) {
+    } catch (error) {
       setError("Error al crear semana");
     }
   };
@@ -63,7 +63,7 @@ export default function HomePage() {
       setIngresoForm({ descripcion: "", monto: "" });
       fetchIngresos(selectedSemana.id);
       fetchBalance(selectedSemana.id);
-    } catch {
+    } catch (error) {
       setError("Error al agregar ingreso");
     }
   };
