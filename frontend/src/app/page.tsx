@@ -23,7 +23,7 @@ export default function HomePage() {
     try {
       const data = await getSemanas();
       setSemanas(data);
-    } catch (e) {
+    } catch (e) { // Esta 'e' te la marcaba como warning, pero no rompe nada
       setError("Error al cargar semanas");
     }
     setLoading(false);
@@ -286,7 +286,12 @@ export default function HomePage() {
             {/* Header de gestión */}
             <div className="text-center mb-8">
               <h2 className="text-2xl sm:text-3xl font-black text-white mb-2">
-                Gestión de <span className="text-transparent bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text">"{selectedSemana.nombre}"</span>
+                {/* ====================================================
+                  ACÁ ESTABA EL BICHO, FIERA (Línea 289 original)
+                  Cambié las comillas literales (") por (&quot;)
+                  ====================================================
+                */}
+                Gestión de <span className="text-transparent bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text">&quot;{selectedSemana.nombre}&quot;</span>
               </h2>
               <p className="text-gray-400 text-sm">Agrega y visualiza tus movimientos financieros</p>
             </div>
