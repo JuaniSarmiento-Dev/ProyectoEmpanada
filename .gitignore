@@ -1,0 +1,50 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+.env
+*.egg-info/
+*.egg
+dist/
+build/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# Database
+*.db
+
+# Node.js
+node_modules/
+
+# Alembic
+alembic/versions/*.pyc
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Tailwind
+*.css.map
+
+# Next.js
+.next/
+
+# Lock files
+package-lock.json
+yarn.lock

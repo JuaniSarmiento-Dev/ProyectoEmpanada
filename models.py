@@ -1,28 +1,36 @@
-from sqlalchemy import Column, String, Date, DateTime, Enum, ForeignKey, Numeric
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.ext.declarative import declarative_base
-import enum
 
-Base = declarative_base()
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Date
+from sqlalchemy.orm import relationship
+from database import Base
 
-class TipoTransaccion(enum.Enum):
-    INGRESO = "ingreso"
-    EGRESO = "egreso"
 
 class Semana(Base):
-    __tablename__ = 'semana'
+    __tablename__ = "semanas"
+    id = Column(Integer, primary_key=True, index=True)
+    nombre = Column(String, index=True)
+    ingresos = relationship("Ingreso", back_populates="semana", cascade="all, delete-orphan")
+    gastos = relationship("Gasto", back_populates="semana", cascade="all, delete-orphan")
 
-    id = Column(UUID(as_uuid=True), primary_key=True, index=True)
-    nombre = Column(String, nullable=False)
-    fecha_inicio = Column(Date, nullable=False)
-    fecha_fin = Column(Date, nullable=False)
+class Ingreso(Base):
+    __tablename__ = "ingresos"
+    id = Column(Integer, primary_key=True, index=True)
+    descripcion = Column(String)
+    monto = Column(Float)
+    semana_id = Column(Integer, ForeignKey("semanas.id"))
+    semana = relationship("Semana", back_populates="ingresos")
 
-class Transaccion(Base):
-    __tablename__ = 'transaccion'
+class Gasto(Base):
+    __tablename__ = "gastos"
+    id = Column(Integer, primary_key=True, index=True)
+    descripcion = Column(String)
+    monto = Column(Float)
+    semana_id = Column(Integer, ForeignKey("semanas.id"))
+    semana = relationship("Semana", back_populates="gastos")
 
-    id = Column(UUID(as_uuid=True), primary_key=True, index=True)
-    fecha = Column(DateTime, nullable=False)
-    tipo = Column(Enum(TipoTransaccion), nullable=False)
-    monto = Column(Numeric, nullable=False)
-    descripcion = Column(String, nullable=True)
-    semana_id = Column(UUID(as_uuid=True), ForeignKey('semana.id'), nullable=False)
+# Empanada queda como ejemplo, puedes eliminarlo si no lo necesitas
+class Empanada(Base):
+    __tablename__ = "empanadas"
+
+    id = Column(Integer, primary_key=True, index=True)
+    nombre = Column(String, index=True)
+    precio = Column(Float)

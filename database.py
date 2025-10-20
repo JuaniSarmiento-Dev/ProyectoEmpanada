@@ -1,23 +1,29 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-from dotenv import load_dotenv
-import os
 
-# Load environment variables from .env file
+import os
+from dotenv import load_dotenv
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+# Cargar las variables de entorno desde el archivo .env
 load_dotenv()
 
-# Read the database URL from the environment variables
+# Lee la URL de la base de datos desde las variables de entorno
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-if not DATABASE_URL:
-    raise ValueError("DATABASE_URL is not set in the .env file")
 
-# Create the SQLAlchemy engine
+# Solo PostgreSQL/Supabase
+if DATABASE_URL.startswith("sqlite"):
+    raise ValueError("El proyecto solo debe usar PostgreSQL/Supabase. Verifica tu .env")
+
 engine = create_engine(DATABASE_URL)
-
-# Create a configured "Session" class
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Base class for our models
 Base = declarative_base()
+
+# Función para obtener una sesión de base de datos
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

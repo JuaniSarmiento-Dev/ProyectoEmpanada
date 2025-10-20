@@ -1,37 +1,57 @@
+
 from pydantic import BaseModel
-from datetime import date, datetime
-from uuid import UUID
-from decimal import Decimal
-from enum import Enum
+from typing import List, Optional
+from datetime import date
 
-class SemanaCreate(BaseModel):
-    nombre: str
-    fecha_inicio: date
-    fecha_fin: date
-
-class SemanaOut(BaseModel):
-    id: UUID
-    nombre: str
-    fecha_inicio: date
-    fecha_fin: date
-
-    model_config = {"from_attributes": True}
-
-class TipoTransaccion(str, Enum):
-    INGRESO = "ingreso"
-    EGRESO = "egreso"
-
-class TransaccionCreate(BaseModel):
-    tipo: TipoTransaccion
-    monto: Decimal
+class IngresoBase(BaseModel):
     descripcion: str
-    semana_id: UUID
+    monto: float
 
-class TransaccionOut(BaseModel):
-    id: UUID
-    fecha: datetime
-    tipo: TipoTransaccion
-    monto: Decimal
+class IngresoCreate(IngresoBase):
+    pass
+
+class Ingreso(IngresoBase):
+    id: int
+    semana_id: int
+    class Config:
+        from_attributes = True
+
+class GastoBase(BaseModel):
     descripcion: str
+    monto: float
 
-    model_config = {"from_attributes": True}
+class GastoCreate(GastoBase):
+    pass
+
+class Gasto(GastoBase):
+    id: int
+    semana_id: int
+    class Config:
+        from_attributes = True
+
+
+class SemanaBase(BaseModel):
+    nombre: str
+
+class SemanaCreate(SemanaBase):
+    pass
+
+class Semana(SemanaBase):
+    id: int
+    ingresos: List[Ingreso] = []
+    gastos: List[Gasto] = []
+    class Config:
+        from_attributes = True
+
+# Empanada (puedes eliminarlo si no lo necesitas)
+class EmpanadaBase(BaseModel):
+    nombre: str
+    precio: float
+
+class EmpanadaCreate(EmpanadaBase):
+    pass
+
+class Empanada(EmpanadaBase):
+    id: int
+    class Config:
+        from_attributes = True
