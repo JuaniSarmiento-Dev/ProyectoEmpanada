@@ -1,4 +1,6 @@
-
+// ===============================================
+// Interfaces existentes (Semanas, Ingresos, etc.)
+// ===============================================
 
 export interface Semana {
   id: number;
@@ -41,7 +43,30 @@ export interface Balance {
   balance: number;
 }
 
+// ===============================================
+// ACÁ EMPIEZA EL ARREGLO
+// Agregamos los 'types' de Empanada que faltaban
+// ===============================================
+
+export interface EmpanadaCreate {
+  descripcion: string; // Asumo que se llama 'descripcion' y 'monto' como en el backend
+  monto: number;
+}
+
+// Esta es la interface que te pedía el error
+export interface Empanada extends EmpanadaCreate {
+  id: number;
+}
+
+// ===============================================
+// API URL (Ya estaba)
+// ===============================================
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8010';
+
+// ===============================================
+// Funciones API (Semanas, Ingresos, Gastos)
+// ===============================================
 
 // --- Semanas ---
 export const getSemanas = async (): Promise<Semana[]> => {
@@ -149,5 +174,27 @@ export const deleteGasto = async (gastoId: number): Promise<void> => {
 export const getBalance = async (semanaId: number): Promise<Balance> => {
   const res = await fetch(`${API_URL}/semanas/${semanaId}/balance/`);
   if (!res.ok) throw new Error('Error al obtener balance');
+  return res.json();
+};
+
+// ===============================================
+// ACÁ TAMBIÉN AGREGAMOS LAS FUNCIONES DE API
+// para los endpoints de empanadas que tenías en main.py
+// ===============================================
+
+// --- Empanadas ---
+export const createEmpanada = async (empanada: EmpanadaCreate): Promise<Empanada> => {
+  const res = await fetch(`${API_URL}/empanadas/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(empanada),
+  });
+  if (!res.ok) throw new Error('Error al crear empanada');
+  return res.json();
+};
+
+export const getEmpanada = async (empanadaId: number): Promise<Empanada> => {
+  const res = await fetch(`${API_URL}/empanadas/${empanadaId}`);
+  if (!res.ok) throw new Error('Error al obtener empanada');
   return res.json();
 };
